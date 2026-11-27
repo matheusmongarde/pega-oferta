@@ -29,31 +29,23 @@ const DOMINIOS_ENCURTADORES = [
   "bit.ly",
   "tinyurl.com",
   "tidd.ly",
-  "awin1.com",
   "gatry.com",
 ];
 
+/** Detecta a loja pelo DOMINIO do link (nao por pedaco de texto: "loja.com" nao e "a.co"). */
 export function detectarLoja(urlStr: string): LojaDetectada {
-  const lower = urlStr.toLowerCase();
-  if (lower.includes("amazon.com") || lower.includes("amzn.to") || lower.includes("a.co")) {
-    return "amazon";
+  let host = "";
+  try {
+    host = new URL(/^https?:\/\//i.test(urlStr.trim()) ? urlStr.trim() : `https://${urlStr.trim()}`).hostname.toLowerCase();
+  } catch {
+    return "outra";
   }
-  if (
-    lower.includes("mercadolivre.com") ||
-    lower.includes("mercadolibre.com") ||
-    lower.includes("meli.la")
-  ) {
-    return "mercadolivre";
-  }
-  if (lower.includes("shopee.com") || lower.includes("shope.ee")) {
-    return "shopee";
-  }
-  if (lower.includes("aliexpress.com") || lower.includes("aliexpress.us")) {
-    return "aliexpress";
-  }
-  if (lower.includes("awin1.com") || lower.includes("tidd.ly")) {
-    return "awin";
-  }
+  const eh = (...dominios: string[]) => dominios.some((d) => host === d || host.endsWith(`.${d}`));
+  if (eh("amazon.com.br", "amazon.com", "amzn.to", "amzn.com", "a.co")) return "amazon";
+  if (eh("mercadolivre.com.br", "mercadolivre.com", "mercadolibre.com", "meli.la")) return "mercadolivre";
+  if (eh("shopee.com.br", "shopee.com", "shope.ee")) return "shopee";
+  if (eh("aliexpress.com", "aliexpress.us")) return "aliexpress";
+  if (eh("awin1.com", "tidd.ly")) return "awin";
   return "outra";
 }
 
@@ -148,6 +140,51 @@ export function tagValida(valor?: string | null): string {
   return limpa;
 }
 
+/**
+ * Tag do Mercado Livre. O link oficial do Gerador de Links leva DOIS parametros:
+ * matt_word (seu usuario de afiliado) e matt_tool (o ID da ferramenta/conta).
+ * So o matt_tool nao identifica a conta. Aceita:
+ *  - "usuario:12345678" (formato salvo)
+ *  - "matt:usuario:12345678"
+ *  - o link longo inteiro gerado pelo ML (com matt_word= e matt_tool=)
+ *  - so um dos dois (fica marcado como incompleto)
+ */
+export function lerTagMercadoLivre(valor?: string | null): {
+  word: string;
+  tool: string;
+  completa: boolean;
+} {
+  const limpa = tagValida(valor);
+  let word = "";
+  let tool = "";
+  if (/matt_(word|tool)=/i.test(limpa)) {
+    try {
+      const u = new URL(limpa.startsWith("http") ? limpa : `https://x.com/?${limpa.replace(/^.*\?/, "")}`);
+      word = (u.searchParams.get("matt_word") || "").trim();
+      tool = (u.searchParams.get("matt_tool") || "").trim();
+    } catch {
+      /* segue vazio */
+    }
+  } else if (limpa.includes(":")) {
+    const partes = limpa.split(":").map((x) => x.trim()).filter(Boolean);
+    if (partes[0]?.toLowerCase() === "matt") partes.shift();
+    word = partes[0] || "";
+    tool = partes[1] || "";
+  } else if (/^\d+$/.test(limpa)) {
+    tool = limpa;
+  } else {
+    word = limpa;
+  }
+  return { word, tool, completa: Boolean(word && tool) };
+}
+
+/** Formato salvo no banco: "usuario:id". */
+export function normalizarTagMercadoLivre(valor?: string | null): string {
+  const t = lerTagMercadoLivre(valor);
+  if (t.word && t.tool) return `${t.word}:${t.tool}`;
+  return t.word || t.tool;
+}
+
 export function converterLinkAfiliado(
   urlExpandida: string,
   marca: Pick<
@@ -200,8 +237,10 @@ export function converterLinkAfiliado(
     }
 
     if (loja === "mercadolivre" && ml) {
-      u.searchParams.set("matt_tool", ml);
-      return { urlAfiliado: u.toString(), loja, convertido: true };
+      const t = lerTagMercadoLivre(ml);
+      if (t.word) u.searchParams.set("matt_word", t.word);
+      if (t.tool) u.searchParams.set("matt_tool", t.tool);
+      return { urlAfiliado: u.toString(), loja, convertido: t.completa };
     }
 
     if (loja === "shopee" && shp) {
@@ -210,20 +249,36 @@ export function converterLinkAfiliado(
       return { urlAfiliado: u.toString(), loja, convertido: true };
     }
 
+    // AliExpress Portals: a chave da conta (aff_short_key) vai no deep link oficial
+    // s.click.aliexpress.com/deep_link.htm apontando pro produto limpo.
     if (loja === "aliexpress" && ali) {
-      u.searchParams.set("aff_platform", "portals-tool");
-      u.searchParams.set("aff_short_key", ali);
-      return { urlAfiliado: u.toString(), loja, convertido: true };
-    }
-
-    if (awin && loja === "awin") {
+      const m = urlExpandida.match(/\/item\/(\d+)\.html/);
+      const alvo = m ? `https://pt.aliexpress.com/item/${m[1]}.html` : `${u.origin}${u.pathname}`;
       return {
-        urlAfiliado: `https://www.awin1.com/cread.php?awinmid=0&awinaffid=${encodeURIComponent(
-          awin
-        )}&ued=${encodeURIComponent(u.toString())}`,
+        urlAfiliado: `https://s.click.aliexpress.com/deep_link.htm?aff_short_key=${encodeURIComponent(
+          ali
+        )}&dl_target_url=${encodeURIComponent(alvo)}`,
         loja,
         convertido: true,
       };
+    }
+
+    // Awin: o link ja traz o ID da loja (awinmid). Mantem a loja e troca so o
+    // afiliado (awinaffid) pelo seu Publisher ID.
+    if (awin && loja === "awin") {
+      const awinOriginal = new URL(urlExpandida);
+      const mid = awinOriginal.searchParams.get("awinmid") || awinOriginal.searchParams.get("mid");
+      const destino = awinOriginal.searchParams.get("ued") || awinOriginal.searchParams.get("p");
+      if (mid && destino && /awin1\.com$/i.test(awinOriginal.hostname)) {
+        return {
+          urlAfiliado: `https://www.awin1.com/cread.php?awinmid=${encodeURIComponent(
+            mid
+          )}&awinaffid=${encodeURIComponent(awin)}&ued=${encodeURIComponent(destino)}`,
+          loja,
+          convertido: true,
+        };
+      }
+      return { urlAfiliado: urlExpandida, loja, convertido: false };
     }
 
     return { urlAfiliado: u.toString(), loja, convertido: false };

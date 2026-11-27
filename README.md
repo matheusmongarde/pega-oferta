@@ -8,6 +8,18 @@
 <p align="center">Grupo de ofertas no piloto automático: garimpa, troca o link pela sua tag e dispara no WhatsApp.</p>
 
 
+## ⚠️ Atualização importante (troca de links)
+
+Se você instalou antes desta versão, **atualize** (`git pull`) e confira suas tags em **Contas de Afiliado**:
+
+- **Mercado Livre:** o link agora leva `matt_word` **e** `matt_tool`. Antes ia só o `matt_tool`, que não identifica a conta. Cole de novo o link gerado no Gerador de Links do ML.
+- **Shopee:** dá para ligar a **API oficial** (AppID + Secret) e o sistema passa a gerar o link curto `s.shopee.com.br`, que é o jeito garantido de creditar.
+- **AliExpress:** a chave agora vai pelo deep link oficial `s.click.aliexpress.com`.
+- **Awin:** o link mantém o ID da loja e troca só o seu Publisher ID (antes saía com `awinmid=0`).
+- **Lojas trocadas:** sites com domínio terminando em "a.com" (ex.: `loja.com.br`) eram confundidos com a Amazon. Corrigido.
+
+Valeu ao [@eduardomrigo](https://x.com/eduardomrigo) pelo toque.
+
 ## Pedágio
 
 O Pega Oferta é grátis para sempre. O pedágio é outro, e não custa nada:
@@ -68,15 +80,17 @@ fonte / grupo espelhado  →  limpa o texto  →  troca o link pela sua tag  →
 
 ## Tags de afiliado
 
-| Loja | Onde a tag entra | Exemplo |
+| Loja | O que colar | Como o link sai |
 | --- | --- | --- |
-| Amazon | `tag` | `seunome-20` |
-| Mercado Livre | `matt_tool` / `matt_word` | o código do seu painel de afiliado |
-| Shopee | ID de afiliado | `an_123456789` |
-| AliExpress | ID do portal | — |
-| Awin | Publisher ID | — |
+| Amazon | sua tag (`seunome-20`) | `amazon.com.br/dp/ID?tag=seunome-20` |
+| Mercado Livre | `matt_word:matt_tool` (ou o link longo do Gerador de Links) | `?matt_word=seuusuario&matt_tool=12345678` |
+| Shopee | AppID + Secret da Open API (recomendado) ou o Affiliate ID | link curto oficial `s.shopee.com.br/...` (sem API: `utm_source=an_<ID>`) |
+| AliExpress | sua `aff_short_key` do Portals | deep link oficial `s.click.aliexpress.com/deep_link.htm` |
+| Awin | seu Publisher ID | troca o `awinaffid` mantendo a loja (`awinmid`) |
 
 Cole em **Contas de Afiliado**. Não sabe qual é a sua? Gere um link no portal da loja e cole no **extrator**: ele acha a tag sozinho.
+
+> **Mercado Livre precisa dos dois:** `matt_word` (seu usuário) **e** `matt_tool` (o ID). Só o `matt_tool` não identifica a sua conta e a venda não cai pra você.
 
 ## Agentes e API
 

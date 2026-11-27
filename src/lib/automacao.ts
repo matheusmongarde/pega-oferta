@@ -5,6 +5,7 @@ import { coletarFonteRss } from "./coletor";
 import { dispararOferta } from "./disparador";
 import { extrairMetadadosUrl } from "./scraper-og";
 import { converterLinkAfiliado, detectarLoja, extrairHashDedup } from "./afiliado";
+import { finalizarLinkAfiliado } from "./shopee-api";
 
 export interface ResultadoMonitor {
   monitor_id: string;
@@ -58,13 +59,16 @@ export async function checarMonitor(monitorId: string): Promise<ResultadoMonitor
     if (!jaExiste) {
       const marca = db.prepare("SELECT * FROM marcas LIMIT 1").get() as unknown as Marca | undefined;
       if (marca) {
-        const conv = converterLinkAfiliado(monitor.url, {
-          amazon_tag: marca.amazon_tag,
-          shopee_id: marca.shopee_id,
-          mercadolivre_tag: marca.mercadolivre_tag,
-          aliexpress_id: marca.aliexpress_id,
-          awin_id: marca.awin_id,
-        });
+        const conv = await finalizarLinkAfiliado(
+          converterLinkAfiliado(monitor.url, {
+            amazon_tag: marca.amazon_tag,
+            shopee_id: marca.shopee_id,
+            mercadolivre_tag: marca.mercadolivre_tag,
+            aliexpress_id: marca.aliexpress_id,
+            awin_id: marca.awin_id,
+          }),
+          monitor.url
+        );
         const precoAntigo =
           meta.precoAntigo > precoDetectado
             ? meta.precoAntigo

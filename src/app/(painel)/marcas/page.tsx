@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { ShopeeApiCard } from "@/components/shopee-api-card";
 import { PageHeader } from "@/components/ui/page-header";
 import { Gaveta } from "@/components/ui/gaveta";
 import { IdentidadeMarcaCard } from "@/components/identidade-marca";
@@ -81,11 +82,11 @@ export default function MarcasPage() {
       passos: [
         "Acesse a Central de Afiliados do Mercado Livre (botão abaixo) com sua conta.",
         "Clique em «Gerador de links», cole o link de qualquer produto e gere seu link de afiliado.",
-        "Abra esse link gerado no navegador, copie a URL longa da barra de endereço (que tem matt_tool=...) e cole no campo abaixo — nós extraímos o código sozinhos!",
+        "Abra esse link gerado no navegador, copie a URL longa da barra de endereço (que tem matt_word=... e matt_tool=...) e cole no campo abaixo. O ML precisa dos dois pra creditar a venda, e nós extraímos sozinhos!",
       ],
       portalLabel: "Abrir Gerador de Links do Mercado Livre",
       portalUrl: "https://www.mercadolivre.com.br/afiliados/linkbuilder",
-      exemploLink: "https://www.mercadolivre.com.br/...?matt_tool=12345678",
+      exemploLink: "https://www.mercadolivre.com.br/...?matt_word=seuusuario&matt_tool=12345678",
     },
     amazon: {
       passos: [
@@ -110,7 +111,7 @@ export default function MarcasPage() {
     aliexpress: {
       passos: [
         "Acesse o painel AliExpress Portals (botão abaixo).",
-        "Gere um link de produto em «Link Generator» e copie o parâmetro aff_short_key.",
+        "Copie a sua aff_short_key (a chave da conta no AliExpress Portals). O sistema monta o deep link oficial s.click.aliexpress.com sozinho.",
         "Ou cole o link gerado abaixo que extraímos o código automaticamente.",
       ],
       portalLabel: "Abrir AliExpress Portals",
@@ -148,13 +149,19 @@ export default function MarcasPage() {
       const u = new URL(limpo.startsWith("http") ? limpo : `https://${limpo}`);
       const p = u.searchParams;
 
-      const mattTool = p.get("matt_tool") || p.get("matt_word");
-      if (mattTool) {
-        setSelecionada({ ...selecionada, mercadolivre_tag: mattTool.trim() });
-        setMsgExtracao({
-          tipo: "ok",
-          texto: `Código Mercado Livre extraído: ${mattTool.trim()} — agora clique em Salvar!`,
-        });
+      const mattWord = (p.get("matt_word") || "").trim();
+      const mattTool = (p.get("matt_tool") || "").trim();
+      if (mattWord || mattTool) {
+        const valor = mattWord && mattTool ? `${mattWord}:${mattTool}` : mattWord || mattTool;
+        setSelecionada({ ...selecionada, mercadolivre_tag: valor });
+        setMsgExtracao(
+          mattWord && mattTool
+            ? { tipo: "ok", texto: `Mercado Livre extraído: usuário ${mattWord} + ID ${mattTool}. Agora clique em Salvar!` }
+            : {
+                tipo: "aviso",
+                texto: `Achei só o ${mattWord ? "matt_word" : "matt_tool"}. O ML precisa dos dois (matt_word e matt_tool) pra creditar a venda: cole o link longo completo do Gerador de Links.`,
+              }
+        );
         return;
       }
 
@@ -299,7 +306,7 @@ export default function MarcasPage() {
           logo: "/logos/mercadolivre-oficial.png",
           pillClaro: false,
           valor: isTagReal(selecionada.mercadolivre_tag) ? selecionada.mercadolivre_tag : "",
-          onde: "Central de Afiliados ML → codigo matt_tool da sua conta",
+          onde: "Central de Afiliados ML → matt_word + matt_tool do Gerador de Links",
           portal: "https://www.mercadolivre.com.br/afiliados",
         },
         {
@@ -628,14 +635,14 @@ export default function MarcasPage() {
             {(lojaFocada === "todas" || lojaFocada === "mercadolivre") && (
               <div>
                 <label className="mb-1 block text-xs font-semibold text-tinta-2">
-                  Mercado Livre (matt_tool)
+                  Mercado Livre (matt_word:matt_tool)
                 </label>
                 <input
                   value={isTagReal(selecionada.mercadolivre_tag) ? selecionada.mercadolivre_tag : ""}
                   onChange={(e) =>
                     setSelecionada({ ...selecionada, mercadolivre_tag: e.target.value })
                   }
-                  placeholder="ex: 12345678"
+                  placeholder="seuusuario:12345678 (ou cole o link do ML)"
                   className="campo font-mono"
                 />
               </div>
@@ -651,6 +658,7 @@ export default function MarcasPage() {
                   placeholder="ex: 18392010293"
                   className="campo font-mono"
                 />
+                <ShopeeApiCard />
               </div>
             )}
             {(lojaFocada === "todas" || lojaFocada === "aliexpress") && (

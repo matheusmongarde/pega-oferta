@@ -14,6 +14,7 @@ import {
 import { extrairCupom, extrairPrecos, limparTituloOferta } from "./parser";
 import { extrairMetadadosUrl, registrarCupomAutomatico } from "./scraper-og";
 import { registrarPrecoHistorico } from "./db-v3";
+import { finalizarLinkAfiliado } from "./shopee-api";
 
 export interface ResultadoColeta {
   fonte_id: string;
@@ -290,7 +291,7 @@ async function coletarPromobit(fonte: Fonte, marca: Marca): Promise<ResultadoCol
           : `https://i.promobit.com.br${o.offerPhoto}`
         : "";
       const cupom = (o.offerCoupon || "").trim().toUpperCase();
-      const conv = converterLinkAfiliado(urlOriginal, marca);
+      const conv = await finalizarLinkAfiliado(converterLinkAfiliado(urlOriginal, marca), urlOriginal);
       const criadoEm =
         o.offerPublished && !Number.isNaN(Date.parse(o.offerPublished))
           ? new Date(o.offerPublished).toISOString()
@@ -510,7 +511,7 @@ export async function coletarFonteRss(fonte: Fonte): Promise<ResultadoColeta> {
       }
       const liberarRss = reservarDedup(hashDedup, titulo);
 
-      const conv = converterLinkAfiliado(urlExpandida, marca);
+      const conv = await finalizarLinkAfiliado(converterLinkAfiliado(urlExpandida, marca), urlExpandida);
       const lojaFinal =
         conv.loja === "outra" && fonte.loja_padrao ? fonte.loja_padrao : conv.loja;
 

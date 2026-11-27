@@ -8,6 +8,7 @@ import {
 } from "./afiliado";
 import type { Marca } from "./db";
 import { extrairMetadadosUrl } from "./scraper-og";
+import { finalizarLinkAfiliado } from "./shopee-api";
 
 export interface OfertaParseada {
   titulo: string;
@@ -237,7 +238,7 @@ export async function parsearTextoOferta(
   const titulo = tituloExtraido === "Oferta sem titulo" && meta.tituloPagina ? meta.tituloPagina.slice(0, 140) : tituloExtraido;
 
   const conv = urlExpandida
-    ? converterLinkAfiliado(urlExpandida, marca)
+    ? await finalizarLinkAfiliado(converterLinkAfiliado(urlExpandida, marca), urlExpandida)
     : { urlAfiliado: "", loja: "outra" as LojaDetectada, convertido: false };
 
   const hashDedup = extrairHashDedup(urlExpandida || titulo, titulo);

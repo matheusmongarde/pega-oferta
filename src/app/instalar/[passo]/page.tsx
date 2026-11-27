@@ -275,12 +275,12 @@ export default function PassoOnboardingPage() {
                 </div>
                 <div>
                   <label className="mb-1 block text-xs font-semibold text-tinta-2">
-                    Mercado Livre Afiliados (código matt_tool)
+                    Mercado Livre Afiliados (matt_word:matt_tool, ou cole o link gerado)
                   </label>
                   <input
                     value={mlTag}
                     onChange={(e) => setMlTag(e.target.value)}
-                    placeholder="12345678"
+                    placeholder="seuusuario:12345678"
                     className="campo font-mono text-sm"
                   />
                 </div>

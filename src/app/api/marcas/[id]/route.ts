@@ -1,3 +1,4 @@
+import { normalizarTagMercadoLivre } from "@/lib/afiliado";
 import { NextResponse } from "next/server";
 import { getDb, type Marca } from "@/lib/db";
 
@@ -36,7 +37,7 @@ export async function PATCH(
     body.preco_max !== undefined ? Number(body.preco_max) : atual.preco_max,
     body.amazon_tag ?? atual.amazon_tag,
     body.shopee_id ?? atual.shopee_id,
-    body.mercadolivre_tag ?? atual.mercadolivre_tag,
+    body.mercadolivre_tag !== undefined ? normalizarTagMercadoLivre(body.mercadolivre_tag) : atual.mercadolivre_tag,
     body.aliexpress_id ?? atual.aliexpress_id,
     body.awin_id ?? atual.awin_id,
     body.template_mensagem ?? atual.template_mensagem,

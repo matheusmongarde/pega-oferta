@@ -1,3 +1,4 @@
+import { normalizarTagMercadoLivre } from "@/lib/afiliado";
 import { NextResponse } from "next/server";
 import { getDb, gerarId, type Marca } from "@/lib/db";
 
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
     Number(body.preco_max) || 0,
     body.amazon_tag || "",
     body.shopee_id || "",
-    body.mercadolivre_tag || "",
+    normalizarTagMercadoLivre(body.mercadolivre_tag),
     body.aliexpress_id || "",
     body.awin_id || "",
     templatePadrao,
