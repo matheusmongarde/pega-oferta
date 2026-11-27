@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Pega-Oferta — Captura em 1 Clique",
+  "version": "1.0.0",
+  "description": "Puxa titulo, preco, foto e link de qualquer loja (Amazon, ML, Shopee, AliExpress) e envia direto pro seu painel pega-oferta.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["http://localhost:3000/*", "http://127.0.0.1:3000/*", "https://*/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Enviar oferta pro pega-oferta"
+  }
+}

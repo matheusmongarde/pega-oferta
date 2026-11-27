@@ -1,0 +1,582 @@
+@import "tailwindcss";
+
+/*
+ * pega-oferta v4.0 — Sistema visual editorial quente (Etapa 1).
+ * Off-white quente com listras diagonais sutis, cards elevados 18px sem borda dura,
+ * display pesada (Bricolage Grotesque) + texto humanista (Instrument Sans), laranja como marca.
+ */
+:root {
+  --menu: 264px;
+
+  /* Superfícies quentes */
+  --fundo: #f7f5f0;
+  --superficie: #ffffff;
+  --rebaixo: #efeae2;
+  --tinta: #181614;
+  --tinta-2: #57524b;
+  --tinta-3: #857e75;
+  --linha: rgba(24, 22, 20, 0.08);
+  --linha-forte: rgba(24, 22, 20, 0.16);
+  --listra-fundo: rgba(24, 22, 20, 0.026);
+
+  /* Cor de acento: terracota fosco super discreto (zero neon) */
+  --fogo: #b45309;
+  --fogo-2: #c26a2b;
+  --fogo-forte: #92400e;
+  --fogo-suave: #f5ede4;
+  --fogo-glow: none;
+
+  /* Ação principal = grafite escuro elegante (sem cansar a vista) */
+  --acao: #1c1917;
+  --acao-forte: #2e2926;
+  --acao-suave: #efeae2;
+  --acao-texto: #ffffff;
+
+  /* Semânticas */
+  --ok: #15803d;
+  --ok-suave: #dcfce7;
+  --alerta: #b45309;
+  --alerta-suave: #fef3c7;
+  --erro: #be123c;
+  --erro-suave: #ffe4e6;
+  --info: #ea580c;
+  --info-suave: #ffedd5;
+  --foco: #ea580c;
+
+  /* Cores de apoio suaves por seção do menu */
+  --sec-inicio-bg: #ffedd5;
+  --sec-inicio-fg: #c2410c;
+  --sec-fontes-bg: #dbeafe;
+  --sec-fontes-fg: #1d4ed8;
+  --sec-ofertas-bg: #fce7f3;
+  --sec-ofertas-fg: #be185d;
+  --sec-esteira-bg: #fef3c7;
+  --sec-esteira-fg: #b45309;
+  --sec-grupos-bg: #dcfce7;
+  --sec-grupos-fg: #15803d;
+  --sec-cupons-bg: #f3e8ff;
+  --sec-cupons-fg: #7e22ce;
+  --sec-vip-bg: #cffafe;
+  --sec-vip-fg: #0e7490;
+  --sec-monitor-bg: #e0e7ff;
+  --sec-monitor-fg: #4338ca;
+  --sec-ajustes-bg: #efeae2;
+  --sec-ajustes-fg: #57524b;
+
+  /* Sombras suaves (estilo editorial elevado, sem borda cinza dura) */
+  --sombra: 0 1px 2px rgba(24, 22, 20, 0.04), 0 6px 20px -10px rgba(24, 22, 20, 0.09);
+  --sombra-card: 0 2px 6px -1px rgba(24, 22, 20, 0.04), 0 14px 32px -14px rgba(24, 22, 20, 0.11);
+  --sombra-alta: 0 8px 28px -8px rgba(24, 22, 20, 0.14);
+  --hachura: rgba(24, 22, 20, 0.04);
+
+  /* Aliases compatíveis */
+  --background: var(--fundo);
+  --surface: var(--superficie);
+  --foreground: var(--tinta);
+  --aco: var(--tinta-3);
+  --concreto: var(--tinta-2);
+  --border: var(--linha);
+  --accent: var(--fogo);
+  --accent-soft: var(--fogo-suave);
+  --accent-hover: var(--fogo-forte);
+  --accent-contrast: #ffffff;
+  --status-confirmado: var(--ok);
+  --status-confirmado-soft: var(--ok-suave);
+  --status-aguardando: var(--alerta);
+  --status-aguardando-soft: var(--alerta-suave);
+  --status-erro: var(--erro);
+  --status-erro-soft: var(--erro-suave);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --fundo: #121110;
+    --superficie: #1b1917;
+    --rebaixo: #25221f;
+    --tinta: #f5f3ef;
+    --tinta-2: #bdb6ac;
+    --tinta-3: #8c857b;
+    --linha: rgba(255, 250, 244, 0.08);
+    --linha-forte: rgba(255, 250, 244, 0.16);
+    --listra-fundo: rgba(255, 250, 244, 0.025);
+
+    --fogo: #c97a40;
+    --fogo-2: #d98e57;
+    --fogo-forte: #b4652e;
+    --fogo-suave: rgba(201, 122, 64, 0.12);
+
+    --acao: #f5f3ef;
+    --acao-forte: #ffffff;
+    --acao-suave: #25221f;
+    --acao-texto: #121110;
+
+    --ok: #4ade80;
+    --ok-suave: rgba(74, 222, 128, 0.14);
+    --alerta: #fbbf24;
+    --alerta-suave: rgba(251, 191, 36, 0.14);
+    --erro: #fb7185;
+    --erro-suave: rgba(251, 113, 133, 0.14);
+    --info: #f97316;
+    --info-suave: rgba(249, 115, 22, 0.16);
+    --foco: #f97316;
+
+    --sec-inicio-bg: rgba(249, 115, 22, 0.18);
+    --sec-inicio-fg: #fb923c;
+    --sec-fontes-bg: rgba(59, 130, 246, 0.18);
+    --sec-fontes-fg: #60a5fa;
+    --sec-ofertas-bg: rgba(236, 72, 153, 0.18);
+    --sec-ofertas-fg: #f472b6;
+    --sec-esteira-bg: rgba(245, 158, 11, 0.18);
+    --sec-esteira-fg: #fbbf24;
+    --sec-grupos-bg: rgba(34, 197, 94, 0.18);
+    --sec-grupos-fg: #4ade80;
+    --sec-cupons-bg: rgba(168, 85, 247, 0.18);
+    --sec-cupons-fg: #c084fc;
+    --sec-vip-bg: rgba(6, 182, 212, 0.18);
+    --sec-vip-fg: #22d3ee;
+    --sec-monitor-bg: rgba(99, 102, 241, 0.18);
+    --sec-monitor-fg: #818cf8;
+    --sec-ajustes-bg: #25221f;
+    --sec-ajustes-fg: #bdb6ac;
+
+    --sombra: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px -12px rgba(0, 0, 0, 0.55);
+    --sombra-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 16px 36px -16px rgba(0, 0, 0, 0.65);
+    --sombra-alta: 0 16px 40px -12px rgba(0, 0, 0, 0.72);
+    --hachura: rgba(255, 255, 255, 0.035);
+    color-scheme: dark;
+  }
+}
+
+:root[data-tema="escuro"] {
+  --fundo: #121110;
+  --superficie: #1b1917;
+  --rebaixo: #25221f;
+  --tinta: #f5f3ef;
+  --tinta-2: #bdb6ac;
+  --tinta-3: #8c857b;
+  --linha: rgba(255, 250, 244, 0.08);
+  --linha-forte: rgba(255, 250, 244, 0.16);
+  --listra-fundo: rgba(255, 250, 244, 0.025);
+
+  --fogo: #c97a40;
+  --fogo-2: #d98e57;
+  --fogo-forte: #b4652e;
+  --fogo-suave: rgba(201, 122, 64, 0.12);
+
+  --acao: #f5f3ef;
+  --acao-forte: #ffffff;
+  --acao-suave: #25221f;
+  --acao-texto: #121110;
+
+  --ok: #4ade80;
+  --ok-suave: rgba(74, 222, 128, 0.14);
+  --alerta: #fbbf24;
+  --alerta-suave: rgba(251, 191, 36, 0.14);
+  --erro: #fb7185;
+  --erro-suave: rgba(251, 113, 133, 0.14);
+  --info: #f97316;
+  --info-suave: rgba(249, 115, 22, 0.16);
+  --foco: #f97316;
+
+  --sec-inicio-bg: rgba(249, 115, 22, 0.18);
+  --sec-inicio-fg: #fb923c;
+  --sec-fontes-bg: rgba(59, 130, 246, 0.18);
+  --sec-fontes-fg: #60a5fa;
+  --sec-ofertas-bg: rgba(236, 72, 153, 0.18);
+  --sec-ofertas-fg: #f472b6;
+  --sec-esteira-bg: rgba(245, 158, 11, 0.18);
+  --sec-esteira-fg: #fbbf24;
+  --sec-grupos-bg: rgba(34, 197, 94, 0.18);
+  --sec-grupos-fg: #4ade80;
+  --sec-cupons-bg: rgba(168, 85, 247, 0.18);
+  --sec-cupons-fg: #c084fc;
+  --sec-vip-bg: rgba(6, 182, 212, 0.18);
+  --sec-vip-fg: #22d3ee;
+  --sec-monitor-bg: rgba(99, 102, 241, 0.18);
+  --sec-monitor-fg: #818cf8;
+  --sec-ajustes-bg: #25221f;
+  --sec-ajustes-fg: #bdb6ac;
+
+  --sombra: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 8px 24px -12px rgba(0, 0, 0, 0.55);
+  --sombra-card: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 16px 36px -16px rgba(0, 0, 0, 0.65);
+  --sombra-alta: 0 16px 40px -12px rgba(0, 0, 0, 0.72);
+  --hachura: rgba(255, 255, 255, 0.035);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-fundo: var(--fundo);
+  --color-superficie: var(--superficie);
+  --color-rebaixo: var(--rebaixo);
+  --color-tinta: var(--tinta);
+  --color-tinta-2: var(--tinta-2);
+  --color-tinta-3: var(--tinta-3);
+  --color-linha: var(--linha);
+  --color-linha-forte: var(--linha-forte);
+  --color-fogo: var(--fogo);
+  --color-fogo-2: var(--fogo-2);
+  --color-fogo-forte: var(--fogo-forte);
+  --color-fogo-suave: var(--fogo-suave);
+  --color-acao: var(--acao);
+  --color-acao-forte: var(--acao-forte);
+  --color-acao-suave: var(--acao-suave);
+  --color-acao-texto: var(--acao-texto);
+  --color-ok: var(--ok);
+  --color-ok-suave: var(--ok-suave);
+  --color-alerta: var(--alerta);
+  --color-alerta-suave: var(--alerta-suave);
+  --color-erro: var(--erro);
+  --color-erro-suave: var(--erro-suave);
+  --color-info: var(--info);
+  --color-info-suave: var(--info-suave);
+
+  --color-background: var(--fundo);
+  --color-surface: var(--superficie);
+  --color-foreground: var(--tinta);
+  --color-aco: var(--tinta-3);
+  --color-concreto: var(--tinta-2);
+  --color-border: var(--linha);
+  --color-accent: var(--fogo);
+  --color-accent-soft: var(--fogo-suave);
+  --color-accent-hover: var(--fogo-forte);
+  --color-accent-contrast: #ffffff;
+  --color-confirmado: var(--ok);
+  --color-confirmado-soft: var(--ok-suave);
+  --color-aguardando: var(--alerta);
+  --color-aguardando-soft: var(--alerta-suave);
+
+  --font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
+  --font-sans: "Instrument Sans Variable", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: var(--fundo);
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--listra-fundo) 0 1px,
+    transparent 1px 11px
+  );
+  background-attachment: fixed;
+  color: var(--tinta);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3,
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  letter-spacing: -0.03em;
+}
+
+@layer base {
+  .grid > * {
+    min-width: 0;
+  }
+  :focus-visible {
+    outline: 2px solid var(--foco);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Números na mesma família humanista com largura tabular (nunca mono) */
+  .num {
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.015em;
+  }
+
+  /* Etiqueta de seção: pílula neutra suave (sem laranja neon) */
+  .sobrelinha,
+  .etiqueta-secao {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--rebaixo);
+    color: var(--tinta-2);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  :root[data-tema="escuro"] .sobrelinha,
+  :root[data-tema="escuro"] .etiqueta-secao {
+    color: var(--fogo-2);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-tema="claro"]) .sobrelinha,
+    :root:not([data-tema="claro"]) .etiqueta-secao {
+      color: var(--fogo-2);
+    }
+  }
+
+  /* Cards elevados (18px, sombra suave, sem borda cinza dura) */
+  .caixa,
+  .cartao,
+  .card-mineral {
+    min-width: 0;
+    background: var(--superficie);
+    border: 1px solid rgba(24, 22, 20, 0.045);
+    border-radius: 18px;
+    box-shadow: var(--sombra-card);
+  }
+  :root[data-tema="escuro"] .caixa,
+  :root[data-tema="escuro"] .cartao,
+  :root[data-tema="escuro"] .card-mineral {
+    border-color: rgba(255, 250, 244, 0.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-tema="claro"]) .caixa,
+    :root:not([data-tema="claro"]) .cartao,
+    :root:not([data-tema="claro"]) .card-mineral {
+      border-color: rgba(255, 250, 244, 0.07);
+    }
+  }
+
+  .caixa-viva {
+    transition: box-shadow 180ms ease-out, transform 180ms ease-out;
+  }
+  @media (hover: hover) {
+    .caixa-viva:hover {
+      box-shadow: var(--sombra-alta);
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Hero grafite quente sólido e limpo (zero brilho neon) */
+  .hero-pega {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #1a1816 0%, #262320 100%);
+    box-shadow: 0 18px 40px -18px rgba(24, 22, 20, 0.38);
+    color: #ffffff;
+  }
+
+  /* Botões base (44px+) */
+  .btn-primario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 12px;
+    background: var(--acao);
+    color: var(--acao-texto);
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px -4px rgba(24, 22, 20, 0.28);
+    transition: background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+  .btn-primario:hover:not(:disabled) {
+    background: var(--acao-forte);
+    transform: translateY(-1px);
+  }
+  .btn-primario:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .btn-secundario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 12px;
+    background: var(--superficie);
+    color: var(--tinta);
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: var(--sombra-card);
+    border: 1px solid rgba(24, 22, 20, 0.05);
+    transition: background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  }
+  .btn-secundario:hover:not(:disabled) {
+    box-shadow: var(--sombra-alta);
+    transform: translateY(-1px);
+  }
+
+  .btn-terciario {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 12px;
+    background: transparent;
+    color: var(--tinta-2);
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 150ms ease;
+  }
+  .btn-terciario:hover {
+    color: var(--tinta);
+  }
+
+  .glow-fogo {
+    box-shadow: 0 6px 16px -6px rgba(234, 88, 12, 0.45);
+  }
+
+  .hachura {
+    position: relative;
+    isolation: isolate;
+  }
+  .hachura::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(135deg, var(--hachura) 0 1px, transparent 1px 9px);
+    -webkit-mask-image: radial-gradient(110% 85% at 100% 0%, #000 0%, rgba(0, 0, 0, 0.22) 45%, transparent 72%);
+    mask-image: radial-gradient(110% 85% at 100% 0%, #000 0%, rgba(0, 0, 0, 0.22) 45%, transparent 72%);
+  }
+
+  .campo,
+  .input-mineral {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--linha-forte);
+    background: var(--superficie);
+    color: var(--tinta);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 120ms ease-out, box-shadow 120ms ease-out;
+  }
+  .campo:focus,
+  .input-mineral:focus {
+    border-color: var(--fogo);
+    box-shadow: 0 0 0 3px var(--fogo-suave);
+  }
+
+  .selo {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    background: var(--rebaixo);
+    color: var(--tinta-2);
+  }
+  .selo-ok { background: var(--ok-suave); color: var(--ok); }
+  .selo-alerta { background: var(--alerta-suave); color: var(--alerta); }
+  .selo-erro { background: var(--erro-suave); color: var(--erro); }
+  .selo-info { background: var(--fogo-suave); color: var(--fogo); }
+
+  .pulso {
+    animation: pulso 2.8s ease-out infinite;
+  }
+}
+
+@keyframes pulso {
+  0%, 60% { box-shadow: 0 0 0 0 rgba(21, 128, 61, 0.5); }
+  90%, 100% { box-shadow: 0 0 0 6px rgba(21, 128, 61, 0); }
+}
+
+@keyframes pagina-entra {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes gaveta-entra {
+  from { opacity: 0; transform: translateX(32px); }
+  to { opacity: 1; transform: none; }
+}
+
+:root[data-menu="recolhido"] {
+  --menu: 78px;
+}
+.conteudo-painel {
+  padding-left: 0;
+}
+@media (min-width: 1024px) {
+  .conteudo-painel {
+    padding-left: var(--menu);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pagina-entra {
+    animation: pagina-entra 240ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+  .gaveta-entra {
+    animation: gaveta-entra 220ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+  .menu-lateral,
+  .conteudo-painel {
+    transition: width 260ms cubic-bezier(0.22, 1, 0.36, 1), padding-left 260ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+/* Troca instantanea entre modo claro e escuro sem desincronizacao de transicoes */
+html.trocando-tema,
+html.trocando-tema *,
+html.trocando-tema *::before,
+html.trocando-tema *::after {
+  transition: none !important;
+}
+
+/* Cancela do pedagio (igual ao garimpo): pula, abre o braco e pousa, de tempos em tempos */
+.cancela-pula {
+  animation: cancela-pula 2.8s cubic-bezier(0.3, 0, 0.3, 1) infinite;
+  transform-origin: 50% 100%;
+}
+.cancela-braco {
+  animation: cancela-braco 2.8s cubic-bezier(0.3, 0, 0.3, 1) infinite;
+  transform-origin: 6px 10px;
+  transform-box: view-box;
+}
+.pulso-pedagio {
+  animation: pulso-pedagio 2.8s ease-out infinite;
+}
+@keyframes cancela-pula {
+  0%, 62%, 100% { transform: translateY(0) scale(1, 1); }
+  66% { transform: translateY(0) scale(1.08, 0.9); }
+  74% { transform: translateY(-5px) scale(0.95, 1.06); }
+  82% { transform: translateY(0) scale(1.04, 0.96); }
+  88% { transform: translateY(-1.5px) scale(1, 1); }
+}
+@keyframes cancela-braco {
+  0%, 64%, 100% { transform: rotate(0deg); }
+  72%, 84% { transform: rotate(-38deg); }
+}
+@keyframes pulso-pedagio {
+  0%, 60% { box-shadow: 0 0 0 0 rgba(227, 173, 53, 0.55); }
+  90%, 100% { box-shadow: 0 0 0 7px rgba(227, 173, 53, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cancela-pula,
+  .cancela-braco,
+  .pulso-pedagio {
+    animation: none;
+  }
+}

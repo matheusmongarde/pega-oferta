@@ -1,0 +1,36 @@
+{
+  "name": "pega-oferta",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Motor open-source de grupos de ofertas para afiliados: garimpa, limpa, troca o link pela sua tag, barra repetidas e dispara no WhatsApp, Telegram e vitrine web.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "tudo": "node scripts/tudo.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.2.5",
+    "@fontsource-variable/instrument-sans": "^5.2.5",
+    "@fontsource/ibm-plex-mono": "^5.2.5",
+    "lucide-react": "^0.511.0",
+    "next": "^15.3.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.8",
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.8",
+    "typescript": "^5.8.3"
+  }
+}
